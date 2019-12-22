@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0"/>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <title></title>
+</head>
+<body>
+<form  method="post" enctype="multipart/form-data" onsubmit="return false;" id="form">
+    {% csrf_token %}
+    <input id="file" name="picture"  type="file" onchange="upload('#file', '#img');" accept="image/*"
+           capture="camera"/><br/>
+    <div>
+        <img src="" id="img" height="200"/>
+    </div>
+    <button  onclick="show()">提交</button>
+</form>
+</body>
+
+<div id="result"></div>
+<script>
+    function show(){
+        console.log(typeof ($('#file')[0].files[0]));
+        let formdata =new FormData();
+        formdata.append("file",$('#file')[0]);
+        console.log(formdata);
+        console.log($('#file')[0].files[0]);
+
+        $.ajax({
+            url:"/upload/",
+            type:"post",
+            data:{img:$('#img')[0].src.split(',')[1]},
+            dataType: "json",
+            success:function(data){
+                console.log(data['words']);
+                let html ='';
+                for(let i=0;i<data['words'].length;i++)
+                    html=html+data['words'][i]['words'];
+                document.getElementById('result').innerHTML=html;
+            },
+        })
+    }
+
+</script>
+
+<script>
+    var upload = function (c, d) {
+        "use strict";
+        var $c = document.querySelector(c),
+            $d = document.querySelector(d),
+            file = $c.files[0],
+            reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function (e) {
+            $d.setAttribute("src", e.target.result);
+        };
+    };
+
+</script>
+</html>

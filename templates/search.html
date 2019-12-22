@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+</head>
+<style>
+    b {
+        color: blue;
+    }
+
+    .toptext {
+        text-align: center;
+        font-size: 30px;
+        font-family: 楷体;
+    }
+
+    text {
+        color: black;
+        white-space: nowrap;
+    }
+
+    #leftbar {
+        height: 300px;
+        width: 150px;
+        padding: 5px;
+        float: left;
+        margin-top: 30px;
+        background-color: #AADDDD;
+        position: absolute;
+        margin-left: 250px;
+    }
+
+    #leftbar a:hover {
+        color: #778899;
+
+    }
+
+    #leftbar a:link, #nav a:visited {
+        text-decoration: none;
+        color: #2A4F6F;
+        background-color: transparent;
+
+    }
+
+    #leftbar h2 {
+        font: 110% Georgia, "Times New Roman", Times, serif;
+        font-weight: bold;
+        color: #2A4F6F;
+        padding: 0px 5px 0px 12px;
+        text-decoration: underline;
+    }
+
+    #leftbar li {
+        font-size: 80%;
+        border-bottom: 1px dotted #B2BCC6;
+        margin-bottom: 0.3em;
+        margin-top: 15px;
+    }
+
+    #leftbar ul {
+        list-style: none;
+        margin: 3em 20px 0px 0px;
+        padding: 0px 0px 15px 22px;
+
+    }
+
+    #rightbar{
+        position:absolute;
+        width:300px;
+        height:400px;
+        margin-left:1200px;
+        background: oldlace;
+        margin-top:70px;
+    }
+    th{
+        border:1px solid #999;
+        border-bottom:none;
+        padding:3px 2px 2px;
+        margin:0;
+        background-color:#ADD;
+        color:#333;
+        font:80% 宋体;
+    }
+
+    #main_body {
+        position: absolute;
+        width: 600px;
+        margin-left: 450px;
+    }
+    #content_re{
+    float:top;
+    clear:both;
+    background-color: #9999CC;
+    height: 300px;
+    width: 700px;
+    padding:20px;
+    }
+    .studentinform_table{
+        /*border-collapse: collapse;*/
+    }
+    .studentinform_table th{
+        margin-left: 10px;
+        padding: 10px;
+        font-size:20px;
+    }
+    .studentinform_table tr{
+        font-size:15px;
+        text-align: center;
+    }
+    #btnsearch{
+        background: url("D:\\workspace\\Python\\db_pro _testedition\\img\\btn_search.jpg");
+    }
+    .problem_box{
+        border: 5px solid #333333;
+        background: cornsilk;
+        margin-top:5px;
+
+    }
+    .stu_infor_table{
+        border: 5px  #333333;
+        border-style:hidden  double solid double ;
+        background: #fff780;
+        margin:10px;
+        padding: 10px;
+        text-align: center;
+    }
+    .problem_box_2{
+        border: 5px  #333333;
+        border-style:hidden  double solid double ;
+        background: #fff780;
+        margin-top:5px;
+
+    }
+
+    #sub_1{
+        width:300px;
+    }
+
+</style>
+<body>
+<div id="topic">
+    <div class="toptext"> 基于点击率的算法题目推荐系统</div>
+
+
+</div>
+
+<div id="leftbar">
+    <ul>
+        <li><a>导航栏</a></li>
+        <li><a onclick="stu_inf1()">学生信息</a></li>
+        <h2>我的题目</h2>
+        <li><a onclick="upload_pro()">上传题目</a></li>
+        <li><a onclick="wrong_pro_inf()">以上传错题</a></li>
+        <li>我的回复</li>
+        <li><a>以帮助解决错题</a></li>
+
+    </ul>
+</div>
+
+<div id="main_body">
+
+    <div id="search_box"
+         style="
+margin-left: 20px;
+float:left;
+margin-top:30px;
+width:550px;
+height: 30px;
+clear:right;
+">
+        <form action="/search/" method="post">
+            <input type="text" name="field" value={{ a|safe }}>
+            <button id="btnsearch" type="submit">搜索</button>
+        </form>
+    </div>
+
+    <div id="content_re">
+        {{ b|safe }}
+    </div>
+
+</div>
+<div id="rightbar">
+    <h2 style="padding:20px">识别结果：</h2>
+    <div id="result" style="padding:20px;
+   ">无</div>
+</div>
+</body>
+<script>
+    function stu_inf1() {
+        $.ajax({
+            url: "/datastu/",
+            data: {data: 1},
+            type: "POST",
+            success: function (data) {
+                let a = "<table class='studentinform_table'>";
+
+                for (let j in data["data"][0])
+                    a = a + "<th>"+j+"</th>";
+                a=a+"<tr>";
+                for(let i=0;i<data["data"].length;i++){
+                    for (let j in data["data"][i])
+                        a = a + "<td class='stu_infor_table'>"+data["data"][i][j]+"</td>";
+                    a=a+"<tr>";
+                }
+                a=a+"</table>";
+                console.log(a);
+
+                {#console.log(Keys(data[0]));#}
+                document.getElementById('content_re').innerHTML = a;
+
+            }
+        })
+    }
+
+
+    function wrong_pro_inf(){
+         $.ajax({
+            url: "/dataproblem/",
+            data: {data: 1},
+            type: "POST",
+         success: function (data) {
+                console.log(data);
+                let a = "<table class='studentinform_table'>";
+                {#for (let j in data["data"][0])#}
+                {#    a = a + "<th>"+j+"</th>";#}
+                 a=a+"<th>题目编号</th>";
+                 a=a+"<th>题目类型</th>";
+                 a=a+"<th>题面</th>";
+                a=a+"<tr>";
+
+                for(let i=0;i<data["data"].length;i++){
+
+                    for (let j in data["data"][i])
+                        a = a + "<td class='problem_box_2'>"+data["data"][i][j]+"</td>";
+                    a=a+"<tr>";
+                }
+                a=a+"</div>"
+                a=a+"</table>";
+                console.log(a);
+                document.getElementById('content_re').innerHTML = a;
+    }})
+    }
+
+    function upload_pro(){
+        let b2="" ;
+
+           b2+= "<form  id='sub_1' method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"return false;\" id=\"form\">\n" +
+               "    <input id=\"file\" name=\"picture\"  type=\"file\" onchange=\"upload('#file', '#img');\" accept=\"image/*\"\n" +
+               "           capture=\"camera\"/><br/>\n" +
+               "    <div>\n" +
+               "        <img src=\"\" id=\"img\" height=\"200\"/>\n" +
+               "    </div>\n" +
+               "    题目类别<input type='text'>"+
+               "    <button  onclick=\"show()\">提交</button>\n" +
+               "</form>\n"
+
+           ;
+         document.getElementById('content_re').innerHTML = b2;
+    }
+        var upload = function (c, d) {
+        "use strict";
+        var $c = document.querySelector(c),
+            $d = document.querySelector(d),
+            file = $c.files[0],
+            reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function (e) {
+            $d.setAttribute("src", e.target.result);
+        };
+        };
+        function text_refine() {
+        }
+
+
+        function show(){
+        console.log(typeof ($('#file')[0].files[0]));
+        let formdata =new FormData();
+        formdata.append("file",$('#file')[0]);
+        console.log(formdata);
+        console.log($('#file')[0].files[0]);
+
+        $.ajax({
+            url:"/upload/",
+            type:"post",
+            data:{img:$('#img')[0].src.split(',')[1]},
+            dataType: "json",
+            success:function(data){
+                console.log(data['words']);
+                let html ='';
+                for(let i=0;i<data['words'].length;i++)
+                    html=html+data['words'][i]['words'];
+                document.getElementById('result').innerHTML=html;
+                document.getElementById('content_re').innerHTML+="<img src='/img/1out.jpg'>" ;
+
+            },
+        })
+    }
+</script>
+
+</html>
